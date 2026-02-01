@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diabetes Risk Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>🩺 Diabetes Risk Prediction</h1>
+        <p>AI-powered health risk screening system</p>
+    </header>
+
+    <form id="predictForm" class="form-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="column">
+            <div class="field">
+                <label>High Blood Pressure</label>
+                <input id="HighBP" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>High Cholesterol</label>
+                <input id="HighChol" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>BMI</label>
+                <input id="BMI" type="number" placeholder="e.g. 22, 34" required>
+            </div>
+
+            <div class="field">
+                <label>Smoker</label>
+                <input id="Smoker" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Physical Activity</label>
+                <input id="PhysActivity" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Consumes Fruits Daily</label>
+                <input id="Fruits" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Consumes Vegetables Daily</label>
+                <input id="Veggies" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Heavy Alcohol Consumption</label>
+                <input id="HvyAlcoholConsump" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Healthcare Access</label>
+                <input id="AnyHealthcare" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Difficulty Walking</label>
+                <input id="DiffWalk" type="number" placeholder="0 or 1" required>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="column">
+            <div class="field">
+                <label>Stroke History</label>
+                <input id="Stroke" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Heart Disease / Attack</label>
+                <input id="HeartDiseaseorAttack" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>Doctor Visit Cost Issue</label>
+                <input id="NoDocbcCost" type="number" placeholder="0 or 1" required>
+            </div>
+
+            <div class="field">
+                <label>General Health (1–5)</label>
+                <input id="GenHlth" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Mental Health Days (0–30)</label>
+                <input id="MentHlth" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Physical Health Days (0–30)</label>
+                <input id="PhysHlth" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Sex (0 = Female, 1 = Male)</label>
+                <input id="Sex" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Age Category (1–13)</label>
+                <input id="Age" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Education Level (1–6)</label>
+                <input id="Education" type="number" required>
+            </div>
+
+            <div class="field">
+                <label>Income Level (1–8)</label>
+                <input id="Income" type="number" required>
+            </div>
+        </div>
+
+    </form>
+
+    <button class="predict-btn" onclick="predict()">Predict Risk</button>
+
+    <div id="result" class="result-card"></div>
+
+    <footer>
+        <small>⚠️ For educational purposes only. Not a medical diagnosis.</small>
+    </footer>
+
+</div>
+
+<script>
+function predict() {
+    const data = {
+        HighBP:+HighBP.value, HighChol:+HighChol.value, CholCheck:1,
+        BMI:+BMI.value, Smoker:+Smoker.value, Stroke:+Stroke.value,
+        HeartDiseaseorAttack:+HeartDiseaseorAttack.value,
+        PhysActivity:+PhysActivity.value, Fruits:+Fruits.value,
+        Veggies:+Veggies.value, HvyAlcoholConsump:+HvyAlcoholConsump.value,
+        AnyHealthcare:+AnyHealthcare.value, NoDocbcCost:+NoDocbcCost.value,
+        GenHlth:+GenHlth.value, MentHlth:+MentHlth.value,
+        PhysHlth:+PhysHlth.value, DiffWalk:+DiffWalk.value,
+        Sex:+Sex.value, Age:+Age.value,
+        Education:+Education.value, Income:+Income.value
+    };
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(out => {
+        document.getElementById("result").innerHTML =
+            `<h3>${out.risk}</h3><p>Risk Probability: <b>${out.probability}</b></p>`;
+    });
+}
+</script>
+
+</body>
+</html>
